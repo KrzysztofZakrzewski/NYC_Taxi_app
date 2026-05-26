@@ -4,6 +4,7 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 import joblib
+import pydeck as pdk
 
 from math import radians, sin, cos, sqrt, atan2, degrees
 
@@ -98,18 +99,192 @@ def calculate_bearing(
 # TITLE
 # =====================================
 
-st.title('🚕 NYC Taxi Trip Duration Predictor')
+st.markdown(
+    "<h1 style='color:#F4A300;'>🚕 NYC Taxi Predictor</h1>",
+    unsafe_allow_html=True
+)
 
 st.markdown(
     'Predict NYC taxi trip duration using a trained Random Forest regression model.'
 )
 
 
+with st.expander("📊 Show Auto-Generated Features"):
+    
+    st.write(
+        """
+        The model automatically generates the following features based on the input coordinates and temporal information:
+        
+        - **Distance (km)**: The Haversine distance between pickup and dropoff points.
+        - **Bearing**: The compass bearing from pickup to dropoff location.
+        - **Weekend Trip**: A binary feature indicating if the trip starts on a weekend.
+        - **Hour Sin/Cos**: Sine and cosine transformations of the pickup hour to capture cyclical patterns.
+        """
+    )
+
+with st.expander("📊 Common places in NYC"):
+    st.write(
+        """
+        Some common places in NYC include:
+        
+        - Flatiron Building: 40.741112 and -73.989723
+        - Times Square
+        - Central Park
+        - Empire State Building
+        - Statue of Liberty
+        - Brooklyn Bridge
+        """
+    )
+
+# places = pd.DataFrame({
+#     'name': [
+#         'Flatiron Building',
+#         'Times Square',
+#         'Central Park'
+#     ],
+#     'lat': [40.741112, 40.758896, 40.782865],
+#     'lon': [-73.989723, -73.985130, -73.965355]
+# })
+
+# st.pydeck_chart(
+#     pdk.Deck(
+
+#         map_style='light',
+
+#         initial_view_state=pdk.ViewState(
+#             latitude=40.758896,
+#             longitude=-73.985130,
+#             zoom=10,
+#             pitch=0,
+#         ),
+
+#         layers=[
+#             pdk.Layer(
+#                 'ScatterplotLayer',
+#                 data=places,
+
+#                 get_position='[lon, lat]',
+
+#                 get_radius=80,
+
+#                 get_fill_color='[255, 165, 0]',
+
+#                 pickable=True,
+#             )
+#         ],
+
+#         tooltip={
+#             'html': '<b>{name}</b><br/>Lat: {lat}<br/>Lon: {lon}',
+#             'style': {
+#                 'backgroundColor': 'white',
+#                 'color': 'black'
+#             }
+#         }
+#     )
+# )
+with st.expander("🗺️ Common Places in NYC MAP"):
+    # st.map(places)
+    places = pd.DataFrame({
+        'name': [
+            'Flatiron Building',
+            'Times Square',
+            'Grand Central Terminal',
+            'Brooklyn Bridge',
+            'Coney Island',
+            'Barclays Center',
+            'John F. Kennedy International Airport',
+            'LaGuardia Airport',
+            'Yankee Stadium',
+            'Arthur Ashe Stadium',
+            'One World Trade Center',
+            'Rockefeller Center',
+            'Bronx Zoo',
+            'Prospect Park',
+            'Columbia University'
+        ],
+
+        'lat': [
+            40.741112,
+            40.758896,
+            40.752726,
+            40.706086,
+            40.574926,
+            40.682650,
+            40.641311,
+            40.776927,
+            40.829643,
+            40.749824,
+            40.712743,
+            40.758740,
+            40.850596,
+            40.660204,
+            40.807536
+        ],
+
+        'lon': [
+            -73.989723,
+            -73.985130,
+            -73.977229,
+            -73.996864,
+            -73.985941,
+            -73.975280,
+            -73.778139,
+            -73.873966,
+            -73.926175,
+            -73.845836,
+            -74.013379,
+            -73.978674,
+            -73.876998,
+            -73.968956,
+            -73.962573
+        ]
+    })
+
+    st.pydeck_chart(
+        pdk.Deck(
+
+            map_style='light',
+
+            initial_view_state=pdk.ViewState(
+                latitude=40.758896,
+                longitude=-73.985130,
+                zoom=11,
+                pitch=0,
+            ),
+
+            layers=[
+                pdk.Layer(
+                    'ScatterplotLayer',
+                    data=places,
+
+                    get_position='[lon, lat]',
+
+                    get_radius=100,
+
+                    get_fill_color='[255, 165, 0]',
+
+                    pickable=True,
+                )
+            ],
+
+            tooltip={
+                'html': '<b>{name}</b><br/>Lat: {lat}<br/>Lon: {lon}',
+                'style': {
+                    'backgroundColor': 'white',
+                    'color': 'black'
+                }
+            }
+        )
+    )
+
 # =====================================
 # USER INPUTS
 # =====================================
 
-st.header('📍 Trip Information')
+st.markdown(
+    "<h2 style='color:#003366;'>🍎️ Trip Information</h2>",
+    unsafe_allow_html=True
+)
 
 vendor_id = st.selectbox(
     'Vendor ID',
@@ -129,7 +304,10 @@ store_and_fwd_flag = st.selectbox(
 )
 
 
-st.header('🗺️ Pickup Coordinates')
+st.markdown(
+    "<h2 style='color:#003366;'>🗺️ Pickup Coordinates</h2>",
+    unsafe_allow_html=True
+)
 
 pickup_latitude = st.number_input(
     'Pickup Latitude',
@@ -144,7 +322,10 @@ pickup_longitude = st.number_input(
 )
 
 
-st.header('🏁 Dropoff Coordinates')
+st.markdown(
+    "<h2 style='color:#003366;'>🏁 Dropoff Coordinates</h2>",
+    unsafe_allow_html=True
+)
 
 dropoff_latitude = st.number_input(
     'Dropoff Latitude',
@@ -159,7 +340,10 @@ dropoff_longitude = st.number_input(
 )
 
 
-st.header('⏰ Temporal Features')
+st.markdown(
+    "<h2 style='color:#003366;'>🍊️ Temporal Features</h2>",
+    unsafe_allow_html=True
+)
 
 pickup_hour = st.slider(
     'Pickup Hour',

@@ -1,0 +1,9 @@
+[theme]
+base="light"
+
+primaryColor="#F4A300"                 # taxi orange
+backgroundColor="#FFFFFF"
+
+secondaryBackgroundColor="#E9EEF5"    # subtle NYC/MTA gray-blue
+
+textColor="#0B1F3A"                   # deep navy blue
