@@ -23,7 +23,7 @@ st.set_page_config(
 # LOAD MODEL
 # =====================================
 
-model = joblib.load('models/random_forest_model_sample.pkl')
+model = joblib.load('models/random_forest_model.pkl')
 
 
 # =====================================
@@ -133,13 +133,13 @@ st.header('🗺️ Pickup Coordinates')
 
 pickup_latitude = st.number_input(
     'Pickup Latitude',
-    value=40.767937,
+    value=40.740757,
     format='%.6f'
 )
 
 pickup_longitude = st.number_input(
     'Pickup Longitude',
-    value=-73.992155,
+    value=-73.990122,
     format='%.6f'
 )
 
@@ -148,13 +148,13 @@ st.header('🏁 Dropoff Coordinates')
 
 dropoff_latitude = st.number_input(
     'Dropoff Latitude',
-    value=40.765602,
+    value=40.701203,
     format='%.6f'
 )
 
 dropoff_longitude = st.number_input(
     'Dropoff Longitude',
-    value=-73.964630,
+    value=-74.013972,
     format='%.6f'
 )
 
@@ -165,21 +165,21 @@ pickup_hour = st.slider(
     'Pickup Hour',
     min_value=0,
     max_value=23,
-    value=17
+    value=10
 )
 
 pickup_weekday = st.slider(
     'Pickup Weekday (0 = Monday)',
     min_value=0,
     max_value=6,
-    value=0
+    value=2
 )
 
 pickup_month = st.slider(
     'Pickup Month',
     min_value=1,
     max_value=12,
-    value=3
+    value=5
 )
 
 
