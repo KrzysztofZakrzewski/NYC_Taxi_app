@@ -24,7 +24,7 @@ st.set_page_config(
 # LOAD MODEL
 # =====================================
 
-# model = joblib.load('models/random_forest_model.pkl')
+model = joblib.load('models/random_forest_model.pkl')
 
 
 # =====================================
@@ -169,8 +169,7 @@ with st.expander("📊 Show Auto-Generated Features"):
 #         }
 #     )
 # )
-with st.expander("🗺️ Common Places in NYC MAP"):
-    # st.map(places)
+
     places = pd.DataFrame({
         'name': [
             'Flatiron Building',
@@ -226,6 +225,10 @@ with st.expander("🗺️ Common Places in NYC MAP"):
             -73.962573
         ]
     })
+
+with st.expander("🗺️ Common Places in NYC MAP"):
+    # st.map(places)
+
 
     st.pydeck_chart(
         pdk.Deck(
@@ -318,33 +321,79 @@ st.markdown(
     unsafe_allow_html=True
 )
 
+# pickup_latitude = st.number_input(
+#     'Pickup Latitude',
+#     value=40.740757,
+#     format='%.6f'
+# )
+
+# pickup_longitude = st.number_input(
+#     'Pickup Longitude',
+#     value=-73.990122,
+#     format='%.6f'
+# )
+
+pickup_place = st.selectbox(
+    'Select Pickup Location',
+    places['name'],
+    index=0
+)
+
+pickup_selected = places[
+    places['name'] == pickup_place
+].iloc[0]
+
 pickup_latitude = st.number_input(
     'Pickup Latitude',
-    value=40.740757,
+    value=float(pickup_selected['lat']),
     format='%.6f'
 )
 
 pickup_longitude = st.number_input(
     'Pickup Longitude',
-    value=-73.990122,
+    value=float(pickup_selected['lon']),
     format='%.6f'
 )
-
 
 st.markdown(
     "<h2 style='color:#003366;'>🏁 Dropoff Coordinates</h2>",
     unsafe_allow_html=True
 )
 
+dropoff_place = st.selectbox(
+    'Select Dropoff Location',
+    places['name'],
+    index=1
+)
+
+
+dropoff_selected = places[
+    places['name'] == dropoff_place
+].iloc[0]
+
+# dropoff_latitude = st.number_input(
+#     'Dropoff Latitude',
+#     value=40.701203,
+#     format='%.6f'
+# )
+
+# dropoff_longitude = st.number_input(
+#     'Dropoff Longitude',
+#     value=-74.013972,
+#     format='%.6f'
+# )
+
+
+
 dropoff_latitude = st.number_input(
     'Dropoff Latitude',
-    value=40.701203,
+    value=float(dropoff_selected['lat']),
     format='%.6f'
 )
 
 dropoff_longitude = st.number_input(
     'Dropoff Longitude',
-    value=-74.013972,
+    value=float(dropoff_selected['lon']),
     format='%.6f'
 )
 
