@@ -24,7 +24,7 @@ st.set_page_config(
 # LOAD MODEL
 # =====================================
 
-model = joblib.load('models/random_forest_model.pkl')
+# model = joblib.load('models/random_forest_model.pkl')
 
 
 # =====================================
@@ -122,19 +122,6 @@ with st.expander("📊 Show Auto-Generated Features"):
         """
     )
 
-with st.expander("📊 Common places in NYC"):
-    st.write(
-        """
-        Some common places in NYC include:
-        
-        - Flatiron Building: 40.741112 and -73.989723
-        - Times Square
-        - Central Park
-        - Empire State Building
-        - Statue of Liberty
-        - Brooklyn Bridge
-        """
-    )
 
 # places = pd.DataFrame({
 #     'name': [
@@ -303,6 +290,28 @@ store_and_fwd_flag = st.selectbox(
     [0, 1]
 )
 
+with st.expander("📊 Common places in NYC (copy paste)"):
+    st.write(
+        """
+        Some common places in NYC include:
+        
+        - Flatiron Building — 40.7411, -73.9897
+        - Times Square — 40.7580, -73.9855
+        - Grand Central Terminal — 40.7527, -73.9772
+        - Brooklyn Bridge — 40.7061, -73.9969
+        - Coney Island — 40.5749, -73.9850
+        - Barclays Center — 40.6826, -73.9754
+        - John F. Kennedy International Airport — 40.6413, -73.7781
+        - LaGuardia Airport — 40.7769, -73.8740
+        - Yankee Stadium — 40.8296, -73.9262
+        - Arthur Ashe Stadium — 40.7499, -73.8473
+        - One World Trade Center — 40.7127, -74.0134
+        - Rockefeller Center — 40.7587, -73.9787
+        - Bronx Zoo — 40.8506, -73.8769
+        - Prospect Park — 40.6602, -73.9690
+        - Columbia University — 40.8075, -73.9626
+        """
+    )
 
 st.markdown(
     "<h2 style='color:#003366;'>🗺️ Pickup Coordinates</h2>",
@@ -371,7 +380,7 @@ pickup_month = st.slider(
 # PREDICTION
 # =====================================
 
-if st.button('🚀 Predict Trip Duration'):
+if st.button('⌚️ Predict Trip Duration'):
 
     distance_km = calculate_distance(
         pickup_latitude,
