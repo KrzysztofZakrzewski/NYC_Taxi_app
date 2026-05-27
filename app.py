@@ -19,18 +19,9 @@ st.set_page_config(
     layout='centered'
 )
 
-
-# =====================================
-# LOAD MODEL
-# =====================================
-
-model = joblib.load('models/random_forest_model.pkl')
-
-
 # =====================================
 # DISTANCE FUNCTION
 # =====================================
-
 
 def calculate_distance(
     pickup_latitude,
@@ -59,11 +50,9 @@ def calculate_distance(
 
     return R * c
 
-
 # =====================================
 # BEARING FUNCTION
 # =====================================
-
 
 def calculate_bearing(
     pickup_latitude,
@@ -123,112 +112,64 @@ with st.expander("📊 Show Auto-Generated Features"):
     )
 
 
-# places = pd.DataFrame({
-#     'name': [
-#         'Flatiron Building',
-#         'Times Square',
-#         'Central Park'
-#     ],
-#     'lat': [40.741112, 40.758896, 40.782865],
-#     'lon': [-73.989723, -73.985130, -73.965355]
-# })
+places = pd.DataFrame({
+    'name': [
+        'Flatiron Building',
+        'Times Square',
+        'Grand Central Terminal',
+        'Brooklyn Bridge',
+        'Coney Island',
+        'Barclays Center',
+        'John F. Kennedy International Airport',
+        'LaGuardia Airport',
+        'Yankee Stadium',
+        'Arthur Ashe Stadium',
+        'One World Trade Center',
+        'Rockefeller Center',
+        'Bronx Zoo',
+        'Prospect Park',
+        'Columbia University'
+    ],
 
-# st.pydeck_chart(
-#     pdk.Deck(
+    'lat': [
+        40.741112,
+        40.758896,
+        40.752726,
+        40.706086,
+        40.574926,
+        40.682650,
+        40.641311,
+        40.776927,
+        40.829643,
+        40.749824,
+        40.712743,
+        40.758740,
+        40.850596,
+        40.660204,
+        40.807536
+    ],
 
-#         map_style='light',
-
-#         initial_view_state=pdk.ViewState(
-#             latitude=40.758896,
-#             longitude=-73.985130,
-#             zoom=10,
-#             pitch=0,
-#         ),
-
-#         layers=[
-#             pdk.Layer(
-#                 'ScatterplotLayer',
-#                 data=places,
-
-#                 get_position='[lon, lat]',
-
-#                 get_radius=80,
-
-#                 get_fill_color='[255, 165, 0]',
-
-#                 pickable=True,
-#             )
-#         ],
-
-#         tooltip={
-#             'html': '<b>{name}</b><br/>Lat: {lat}<br/>Lon: {lon}',
-#             'style': {
-#                 'backgroundColor': 'white',
-#                 'color': 'black'
-#             }
-#         }
-#     )
-# )
-
-    places = pd.DataFrame({
-        'name': [
-            'Flatiron Building',
-            'Times Square',
-            'Grand Central Terminal',
-            'Brooklyn Bridge',
-            'Coney Island',
-            'Barclays Center',
-            'John F. Kennedy International Airport',
-            'LaGuardia Airport',
-            'Yankee Stadium',
-            'Arthur Ashe Stadium',
-            'One World Trade Center',
-            'Rockefeller Center',
-            'Bronx Zoo',
-            'Prospect Park',
-            'Columbia University'
-        ],
-
-        'lat': [
-            40.741112,
-            40.758896,
-            40.752726,
-            40.706086,
-            40.574926,
-            40.682650,
-            40.641311,
-            40.776927,
-            40.829643,
-            40.749824,
-            40.712743,
-            40.758740,
-            40.850596,
-            40.660204,
-            40.807536
-        ],
-
-        'lon': [
-            -73.989723,
-            -73.985130,
-            -73.977229,
-            -73.996864,
-            -73.985941,
-            -73.975280,
-            -73.778139,
-            -73.873966,
-            -73.926175,
-            -73.845836,
-            -74.013379,
-            -73.978674,
-            -73.876998,
-            -73.968956,
-            -73.962573
-        ]
-    })
+    'lon': [
+        -73.989723,
+        -73.985130,
+        -73.977229,
+        -73.996864,
+        -73.985941,
+        -73.975280,
+        -73.778139,
+        -73.873966,
+        -73.926175,
+        -73.845836,
+        -74.013379,
+        -73.978674,
+        -73.876998,
+        -73.968956,
+        -73.962573
+    ]
+})
 
 with st.expander("🗺️ Common Places in NYC MAP"):
     # st.map(places)
-
 
     st.pydeck_chart(
         pdk.Deck(
@@ -268,6 +209,24 @@ with st.expander("🗺️ Common Places in NYC MAP"):
     )
 
 # =====================================
+# LOAD MODEL
+# =====================================
+
+model_version = st.radio(
+    'Select Model Version',
+    ['200K Optimized Model', '1.4M Full Model']
+)
+
+if model_version == '1.4M Full Model':
+    model = joblib.load(
+        'models/random_forest_model.pkl'
+    )
+else:
+    model = joblib.load(
+        'models/random_forest_model_sample.pkl'
+    )
+
+# =====================================
 # USER INPUTS
 # =====================================
 
@@ -293,45 +252,10 @@ store_and_fwd_flag = st.selectbox(
     [0, 1]
 )
 
-with st.expander("📊 Common places in NYC (copy paste)"):
-    st.write(
-        """
-        Some common places in NYC include:
-        
-        - Flatiron Building — 40.7411, -73.9897
-        - Times Square — 40.7580, -73.9855
-        - Grand Central Terminal — 40.7527, -73.9772
-        - Brooklyn Bridge — 40.7061, -73.9969
-        - Coney Island — 40.5749, -73.9850
-        - Barclays Center — 40.6826, -73.9754
-        - John F. Kennedy International Airport — 40.6413, -73.7781
-        - LaGuardia Airport — 40.7769, -73.8740
-        - Yankee Stadium — 40.8296, -73.9262
-        - Arthur Ashe Stadium — 40.7499, -73.8473
-        - One World Trade Center — 40.7127, -74.0134
-        - Rockefeller Center — 40.7587, -73.9787
-        - Bronx Zoo — 40.8506, -73.8769
-        - Prospect Park — 40.6602, -73.9690
-        - Columbia University — 40.8075, -73.9626
-        """
-    )
-
 st.markdown(
     "<h2 style='color:#003366;'>🗺️ Pickup Coordinates</h2>",
     unsafe_allow_html=True
 )
-
-# pickup_latitude = st.number_input(
-#     'Pickup Latitude',
-#     value=40.740757,
-#     format='%.6f'
-# )
-
-# pickup_longitude = st.number_input(
-#     'Pickup Longitude',
-#     value=-73.990122,
-#     format='%.6f'
-# )
 
 pickup_place = st.selectbox(
     'Select Pickup Location',
@@ -370,20 +294,6 @@ dropoff_place = st.selectbox(
 dropoff_selected = places[
     places['name'] == dropoff_place
 ].iloc[0]
-
-# dropoff_latitude = st.number_input(
-#     'Dropoff Latitude',
-#     value=40.701203,
-#     format='%.6f'
-# )
-
-# dropoff_longitude = st.number_input(
-#     'Dropoff Longitude',
-#     value=-74.013972,
-#     format='%.6f'
-# )
-
-
 
 dropoff_latitude = st.number_input(
     'Dropoff Latitude',
@@ -501,3 +411,43 @@ if st.button('⌚️ Predict Trip Duration'):
     st.write(f'Distance (km): {distance_km:.2f}')
     st.write(f'Bearing: {bearing:.2f}')
     st.write(f'Weekend Trip: {is_weekend}')
+
+with st.expander("👨‍💻 Credits & Resources"):
+
+    st.markdown(
+        """
+        ### 🚕 NYC Taxi Trip Duration Predictor
+
+        **Author:**  
+        Krzysztof Zakrzewski
+
+        ---
+
+        🔗 **Portfolio**  
+        https://krzysztofzakrzewski.github.io/portfolio/
+
+        🔗 **LinkedIn**  
+        https://www.linkedin.com/in/TWOJ_LINKEDIN/
+
+        🔗 **GitHub Repositories**
+        - EDA Project  
+          https://github.com/KrzysztofZakrzewski/NYC_Taxi_Trip_Duration_EDA
+
+        - ML Project  
+          https://github.com/KrzysztofZakrzewski/NYC_Taxi_Trip_Duration_ML
+
+        - Streamlit App  
+          https://github.com/KrzysztofZakrzewski/NYC_Taxi_app
+
+        ---
+
+        📂 **Dataset Source (Kaggle)**  
+        https://www.kaggle.com/datasets/yasserh/nyc-taxi-trip-duration
+
+        🏛️ **Original Data Provider**  
+        NYC Taxi and Limousine Commission (TLC)
+
+        🔗 **Official TLC Data Portal**  
+        https://www.nyc.gov/site/tlc/about/tlc-trip-record-data.page
+        """
+    )
